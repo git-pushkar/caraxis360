@@ -416,42 +416,85 @@
             display: none;
         }
 
-        .car-3d-container {
+        /* 360° Interactive Viewer */
+        .car-360-viewer {
+            position: relative;
             width: 100%;
+            max-width: 600px;
             height: 350px;
             display: flex;
             align-items: center;
             justify-content: center;
-            perspective: 1200px;
             margin-bottom: 2rem;
         }
 
-        .ferrari-3d {
-            width: 400px;
-            height: 200px;
+        .car-360-canvas {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .rotating-car {
+            width: 500px;
+            height: 300px;
+            position: relative;
             transform-style: preserve-3d;
-            animation: rotateFerrari 12s ease-in-out infinite;
-            filter: drop-shadow(0 10px 30px rgba(0, 229, 255, 0.3));
+            animation: autoRotate 20s linear infinite;
+            transition: transform 0.1s;
         }
 
-        @keyframes rotateFerrari {
-            0%, 100% { 
-                transform: perspective(1200px) rotateY(-15deg) rotateX(3deg) translateZ(0); 
-            }
-            50% { 
-                transform: perspective(1200px) rotateY(15deg) rotateX(-3deg) translateZ(20px); 
-            }
+        .rotating-car.dragging {
+            animation: none;
         }
 
-        .ferrari-3d:hover {
-            animation-play-state: paused;
+        @keyframes autoRotate {
+            from { transform: rotateY(0deg); }
+            to { transform: rotateY(360deg); }
+        }
+
+        .angle-indicator {
+            position: absolute;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 229, 255, 0.1);
+            border: 1px solid rgba(0, 229, 255, 0.3);
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .control-dots {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .control-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(0, 229, 255, 0.3);
+            transition: all 0.3s;
+        }
+
+        .control-dot.active {
+            background: var(--accent);
+            transform: scale(1.3);
         }
 
         .rotation-hint {
+            text-align: center;
             color: var(--text-secondary);
             font-size: 0.9rem;
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 0.5rem;
         }
 
@@ -855,244 +898,32 @@
                 </div>
 
                 <div class="hero-3d">
-                    <div class="car-showcase">
+                    <div class="car-showcase" id="car360Viewer">
                         <div class="car-showcase-inner">
-                            <div class="car-3d-container">
-                                <div class="ferrari-3d">
-                                    <svg width="400" height="200" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
-                                        <defs>
-                                            <linearGradient id="ferrariRed" x1="0%" y1="0%" x2="100%" y2="100%">
-                                                <stop offset="0%" style="stop-color:#DC0000"/>
-                                                <stop offset="50%" style="stop-color:#FF1744"/>
-                                                <stop offset="100%" style="stop-color:#8B0000"/>
-                                            </linearGradient>
-                                            
-                                            <linearGradient id="carChrome" x1="0%" y1="0%" x2="100%" y2="0%">
-                                                <stop offset="0%" style="stop-color:#C0C0C0"/>
-                                                <stop offset="50%" style="stop-color:#FFFFFF"/>
-                                                <stop offset="100%" style="stop-color:#A8A8A8"/>
-                                            </linearGradient>
-                                            
-                                            <linearGradient id="holographic">
-                                                <stop offset="0%" style="stop-color:#00E5FF"/>
-                                                <stop offset="50%" style="stop-color:#FF3D00"/>
-                                                <stop offset="100%" style="stop-color:#00E5FF"/>
-                                            </linearGradient>
-                                            
-                                            <filter id="carGlow">
-                                                <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-                                                <feMerge>
-                                                    <feMergeNode in="coloredBlur"/>
-                                                    <feMergeNode in="SourceGraphic"/>
-                                                </feMerge>
-                                            </filter>
-                                            
-                                            <filter id="shadow">
-                                                <feGaussianBlur in="SourceAlpha" stdDeviation="4"/>
-                                                <feOffset dx="0" dy="8" result="offsetblur"/>
-                                                <feFlood flood-color="#000000" flood-opacity="0.3"/>
-                                                <feComposite in2="offsetblur" operator="in"/>
-                                                <feMerge>
-                                                    <feMergeNode/>
-                                                    <feMergeNode in="SourceGraphic"/>
-                                                </feMerge>
-                                            </filter>
-                                        </defs>
-                                        
-                                        <!-- Shadow under car -->
-                                        <ellipse cx="200" cy="160" rx="120" ry="15" fill="#000" opacity="0.2"/>
-                                        
-                                        <!-- Main Ferrari F1 Car -->
-                                        <g transform="translate(200, 100)">
-                                            
-                                            <!-- REAR WING -->
-                                            <g transform="translate(-110, -15)">
-                                                <rect x="0" y="-35" width="18" height="5" rx="2" fill="url(#ferrariRed)" stroke="#8B0000" stroke-width="1"/>
-                                                <rect x="0" y="-29" width="18" height="5" rx="2" fill="url(#ferrariRed)" stroke="#8B0000" stroke-width="1"/>
-                                                <rect x="-2" y="-38" width="4" height="20" rx="1" fill="#1a1a1a"/>
-                                                <rect x="18" y="-38" width="4" height="20" rx="1" fill="#1a1a1a"/>
-                                            </g>
-                                            
-                                            <!-- CAR BODY -->
-                                            <g filter="url(#shadow)">
-                                                <!-- Engine cover -->
-                                                <path d="M -100,-10 L -80,-15 L -40,-18 L 0,-20 L 50,-18 L 90,-12 L 110,-8" 
-                                                      fill="url(#ferrariRed)" 
-                                                      stroke="#8B0000" 
-                                                      stroke-width="2"/>
-                                                
-                                                <!-- Sidepod -->
-                                                <path d="M -30,-12 L 0,-15 L 60,-12 L 90,-6 L 90,20 L 60,24 L -30,20 Z" 
-                                                      fill="url(#ferrariRed)" 
-                                                      stroke="#8B0000" 
-                                                      stroke-width="2"/>
-                                                
-                                                <!-- Air intake -->
-                                                <rect x="-20" y="-28" width="24" height="12" rx="3" 
-                                                      fill="#1a1a1a" 
-                                                      stroke="url(#holographic)" 
-                                                      stroke-width="1.5"/>
-                                                
-                                                <!-- HALO (cockpit protection) -->
-                                                <g transform="translate(-35, -5)">
-                                                    <path d="M 0,-20 Q -6,-30 0,-35 Q 6,-30 0,-20" 
-                                                          fill="none" 
-                                                          stroke="url(#carChrome)" 
-                                                          stroke-width="5"
-                                                          stroke-linecap="round"/>
-                                                    <line x1="-3" y1="-20" x2="-3" y2="-12" stroke="url(#carChrome)" stroke-width="5"/>
-                                                    <line x1="3" y1="-20" x2="3" y2="-12" stroke="url(#carChrome)" stroke-width="5"/>
-                                                </g>
-                                                
-                                                <!-- Cockpit opening -->
-                                                <ellipse cx="-35" cy="-15" rx="18" ry="8" 
-                                                         fill="rgba(0, 0, 0, 0.7)" 
-                                                         stroke="url(#holographic)" 
-                                                         stroke-width="1.5"/>
-                                                
-                                                <!-- Driver helmet visible -->
-                                                <ellipse cx="-35" cy="-18" rx="8" ry="6" 
-                                                         fill="url(#carChrome)" 
-                                                         opacity="0.6"/>
-                                                
-                                                <!-- Nose cone -->
-                                                <path d="M 90,-8 L 120,-5 L 135,-3 L 140,0 L 135,3 L 120,5 L 90,8" 
-                                                      fill="url(#ferrariRed)" 
-                                                      stroke="#8B0000" 
-                                                      stroke-width="2"/>
-                                                
-                                                <!-- FRONT WING -->
-                                                <g transform="translate(135, 0)">
-                                                    <path d="M 0,-8 L 20,-10 L 25,-8 L 20,-6 L 0,-4" 
-                                                          fill="none" 
-                                                          stroke="url(#holographic)" 
-                                                          stroke-width="3"/>
-                                                    <path d="M 0,-4 L 20,-6 L 25,-4 L 20,-2 L 0,0" 
-                                                          fill="none" 
-                                                          stroke="url(#holographic)" 
-                                                          stroke-width="3"/>
-                                                    <path d="M 0,0 L 20,-2 L 25,0 L 20,2 L 0,4" 
-                                                          fill="none" 
-                                                          stroke="url(#holographic)" 
-                                                          stroke-width="3"/>
-                                                    <path d="M 0,4 L 20,2 L 25,4 L 20,6 L 0,8" 
-                                                          fill="none" 
-                                                          stroke="url(#holographic)" 
-                                                          stroke-width="3"/>
-                                                    <rect x="-3" y="-12" width="5" height="26" rx="1" fill="#1a1a1a"/>
-                                                </g>
-                                                
-                                                <!-- Ferrari branding stripe -->
-                                                <line x1="-90" y1="0" x2="100" y2="-2" 
-                                                      stroke="#FFD700" 
-                                                      stroke-width="3" 
-                                                      opacity="0.8"/>
-                                                
-                                                <!-- Sponsor logos area -->
-                                                <rect x="-40" y="-5" width="25" height="8" rx="2" 
-                                                      fill="#FFD700" 
-                                                      opacity="0.6"/>
-                                                <rect x="20" y="-5" width="25" height="8" rx="2" 
-                                                      fill="#FFFFFF" 
-                                                      opacity="0.5"/>
-                                            </g>
-                                            
-                                            <!-- REAR WHEEL -->
-                                            <g transform="translate(-80, 25)">
-                                                <circle cx="0" cy="0" r="22" 
-                                                        fill="#1a1a1a" 
-                                                        stroke="#2a2a2a" 
-                                                        stroke-width="2"/>
-                                                <circle cx="0" cy="0" r="18" 
-                                                        fill="none" 
-                                                        stroke="url(#carChrome)" 
-                                                        stroke-width="5"/>
-                                                <circle cx="0" cy="0" r="10" 
-                                                        fill="url(#holographic)"/>
-                                                <!-- Pirelli branding -->
-                                                <text x="-12" y="5" 
-                                                      font-family="Arial" 
-                                                      font-size="10" 
-                                                      font-weight="bold" 
-                                                      fill="#FFD700">
-                                                    PIRELLI
-                                                </text>
-                                                <!-- Wheel spokes -->
-                                                <g opacity="0.4">
-                                                    <line x1="-12" y1="0" x2="12" y2="0" stroke="#fff" stroke-width="1.5"/>
-                                                    <line x1="0" y1="-12" x2="0" y2="12" stroke="#fff" stroke-width="1.5"/>
-                                                </g>
-                                            </g>
-                                            
-                                            <!-- FRONT WHEEL -->
-                                            <g transform="translate(85, 25)">
-                                                <circle cx="0" cy="0" r="22" 
-                                                        fill="#1a1a1a" 
-                                                        stroke="#2a2a2a" 
-                                                        stroke-width="2"/>
-                                                <circle cx="0" cy="0" r="18" 
-                                                        fill="none" 
-                                                        stroke="url(#carChrome)" 
-                                                        stroke-width="5"/>
-                                                <circle cx="0" cy="0" r="10" 
-                                                        fill="url(#holographic)"/>
-                                                <text x="-12" y="5" 
-                                                      font-family="Arial" 
-                                                      font-size="10" 
-                                                      font-weight="bold" 
-                                                      fill="#FFD700">
-                                                    PIRELLI
-                                                </text>
-                                                <g opacity="0.4">
-                                                    <line x1="-12" y1="0" x2="12" y2="0" stroke="#fff" stroke-width="1.5"/>
-                                                    <line x1="0" y1="-12" x2="0" y2="12" stroke="#fff" stroke-width="1.5"/>
-                                                </g>
-                                            </g>
-                                            
-                                            <!-- LED Headlights -->
-                                            <circle cx="138" cy="0" r="4" 
-                                                    fill="#00E5FF" 
-                                                    opacity="0.9"
-                                                    filter="url(#carGlow)">
-                                                <animate attributeName="opacity" 
-                                                         values="0.9;1;0.9" 
-                                                         dur="2s" 
-                                                         repeatCount="indefinite"/>
-                                            </circle>
-                                            
-                                            <!-- Rear lights -->
-                                            <circle cx="-110" cy="-5" r="3" 
-                                                    fill="#FF0000" 
-                                                    opacity="0.8"
-                                                    filter="url(#carGlow)">
-                                                <animate attributeName="opacity" 
-                                                         values="0.8;1;0.8" 
-                                                         dur="1.5s" 
-                                                         repeatCount="indefinite"/>
-                                            </circle>
-                                            
-                                            <!-- Speed lines effect -->
-                                            <g opacity="0.3">
-                                                <line x1="-140" y1="-10" x2="-160" y2="-12" stroke="url(#holographic)" stroke-width="1.5">
-                                                    <animate attributeName="x1" values="-140;-120;-140" dur="1s" repeatCount="indefinite"/>
-                                                    <animate attributeName="x2" values="-160;-140;-160" dur="1s" repeatCount="indefinite"/>
-                                                </line>
-                                                <line x1="-140" y1="0" x2="-165" y2="0" stroke="url(#holographic)" stroke-width="2">
-                                                    <animate attributeName="x1" values="-140;-120;-140" dur="1.2s" repeatCount="indefinite"/>
-                                                    <animate attributeName="x2" values="-165;-145;-165" dur="1.2s" repeatCount="indefinite"/>
-                                                </line>
-                                                <line x1="-140" y1="10" x2="-160" y2="12" stroke="url(#holographic)" stroke-width="1.5">
-                                                    <animate attributeName="x1" values="-140;-120;-140" dur="0.9s" repeatCount="indefinite"/>
-                                                    <animate attributeName="x2" values="-160;-140;-160" dur="0.9s" repeatCount="indefinite"/>
-                                                </line>
-                                            </g>
-                                        </g>
-                                    </svg>
+                            <div class="car-360-viewer">
+                                <div class="car-360-canvas" id="carCanvas">
+                                    <div class="rotating-car" id="rotatingCar">
+                                        <!-- 360° Car Image -->
+                                        <img src="https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=800&q=80" 
+                                             alt="Interactive 360° Car View" 
+                                             style="width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 20px 50px rgba(0, 229, 255, 0.4)); pointer-events: none;">
+                                    </div>
                                 </div>
+                                <div class="angle-indicator" id="angleIndicator">Angle: 0°</div>
                             </div>
                             <div class="rotation-hint">
                                 <span class="rotate-icon">🔄</span>
-                                <span>Experience cars in stunning 3D • Coming Soon</span>
+                                <span>👆 Drag to rotate • Auto-rotating 360° • Try it now!</span>
+                            </div>
+                            <div class="control-dots">
+                                <div class="control-dot active"></div>
+                                <div class="control-dot"></div>
+                                <div class="control-dot"></div>
+                                <div class="control-dot"></div>
+                                <div class="control-dot"></div>
+                                <div class="control-dot"></div>
+                                <div class="control-dot"></div>
+                                <div class="control-dot"></div>
                             </div>
                         </div>
                     </div>
@@ -1649,6 +1480,92 @@
         }
         
         drawGlobe();
+    })();
+    </script>
+
+    <!-- ═══════════════════════════════════════════════════════
+         INTERACTIVE 360° CAR VIEWER
+    ═══════════════════════════════════════════════════════ -->
+    <script>
+    (function() {
+        const rotatingCar = document.getElementById('rotatingCar');
+        const angleIndicator = document.getElementById('angleIndicator');
+        const car360Viewer = document.getElementById('car360Viewer');
+        const controlDots = document.querySelectorAll('.control-dot');
+        
+        if (!rotatingCar) return;
+        
+        let isDragging = false;
+        let startX = 0;
+        let currentRotation = 0;
+        let targetRotation = 0;
+        
+        // Mouse/Touch events for dragging
+        car360Viewer.addEventListener('mousedown', startDrag);
+        car360Viewer.addEventListener('touchstart', startDrag);
+        
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('touchmove', drag);
+        
+        document.addEventListener('mouseup', stopDrag);
+        document.addEventListener('touchend', stopDrag);
+        
+        function startDrag(e) {
+            isDragging = true;
+            rotatingCar.classList.add('dragging');
+            startX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+        }
+        
+        function drag(e) {
+            if (!isDragging) return;
+            e.preventDefault();
+            
+            const currentX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
+            const deltaX = currentX - startX;
+            
+            // Update rotation based on drag (1 degree per 2 pixels)
+            targetRotation += deltaX * 0.5;
+            startX = currentX;
+            
+            updateRotation();
+        }
+        
+        function stopDrag() {
+            if (isDragging) {
+                isDragging = false;
+                rotatingCar.classList.remove('dragging');
+            }
+        }
+        
+        function updateRotation() {
+            // Normalize rotation to 0-360
+            currentRotation = targetRotation % 360;
+            if (currentRotation < 0) currentRotation += 360;
+            
+            // Apply rotation
+            rotatingCar.style.transform = `rotateY(${currentRotation}deg)`;
+            
+            // Update angle indicator
+            angleIndicator.textContent = `Angle: ${Math.floor(currentRotation)}°`;
+            
+            // Update control dots
+            const step = 360 / controlDots.length;
+            const activeIndex = Math.floor(currentRotation / step);
+            controlDots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === activeIndex);
+            });
+        }
+        
+        // Smooth animation loop for auto-rotation when not dragging
+        function animate() {
+            if (!isDragging) {
+                targetRotation += 0.3; // Slow auto-rotation
+                updateRotation();
+            }
+            requestAnimationFrame(animate);
+        }
+        
+        animate();
     })();
     </script>
 </body>
