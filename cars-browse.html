@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CarAxis360 - Browse All Cars | 2026 Models</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #0A0E27;
+            --bg-darker: #050815;
+            --accent: #00E5FF;
+            --accent-secondary: #FF3D00;
+            --text: #FFFFFF;
+            --text-secondary: #B0B8C1;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-darker);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(10, 14, 39, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 1.5rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0, 229, 255, 0.1);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea, #00f2fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .search-bar {
+            flex: 1;
+            max-width: 500px;
+            margin: 0 3rem;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.9rem 1.2rem 0.9rem 3rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 229, 255, 0.2);
+            border-radius: 50px;
+            color: var(--text);
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1.2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        /* Brands Section */
+        .brands-section {
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 30px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+            border-radius: 10px;
+        }
+
+        .brands-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .brand-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(0, 229, 255, 0.1);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .brand-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 229, 255, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .brand-card:hover::before {
+            opacity: 1;
+        }
+
+        .brand-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+            box-shadow: 0 10px 40px rgba(0, 229, 255, 0.3);
+        }
+
+        .brand-card.active {
+            border-color: var(--accent);
+            background: rgba(0, 229, 255, 0.1);
+        }
+
+        .brand-logo {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            margin-bottom: 0.8rem;
+            filter: brightness(1.1) contrast(1.1);
+            transition: all 0.3s;
+        }
+
+        .brand-card:hover .brand-logo {
+            filter: brightness(1.3) contrast(1.2);
+            transform: scale(1.05);
+        }
+
+        .brand-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text);
+        }
+
+        .brand-count {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        /* Cars Grid */
+        .cars-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+            opacity: 0;
+            animation: fadeIn 0.6s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .car-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(0, 229, 255, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            cursor: pointer;
+        }
+
+        .car-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent);
+            box-shadow: 0 20px 60px rgba(0, 229, 255, 0.3);
+        }
+
+        .car-image-container {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, rgba(0, 229, 255, 0.05), rgba(255, 61, 0, 0.05));
+            overflow: hidden;
+        }
+
+        .car-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s;
+        }
+
+        .car-card:hover .car-image {
+            transform: scale(1.1);
+        }
+
+        .badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(0, 229, 255, 0.9);
+            color: #000;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge.new {
+            background: linear-gradient(135deg, #00E5FF, #FF3D00);
+        }
+
+        .car-details {
+            padding: 1.5rem;
+        }
+
+        .car-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+
+        .car-price {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .car-specs {
+            display: flex;
+            gap: 1.5rem;
+            padding: 1rem 0;
+            border-top: 1px solid rgba(0, 229, 255, 0.1);
+            border-bottom: 1px solid rgba(0, 229, 255, 0.1);
+            margin-bottom: 1rem;
+        }
+
+        .spec-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .spec-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        .spec-value {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .car-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-tag {
+            background: rgba(0, 229, 255, 0.1);
+            color: var(--accent);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .car-cta {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 0.8rem;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 229, 255, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0, 229, 255, 0.1);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 4rem;
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .brands-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                gap: 1rem;
+            }
+
+            .cars-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .search-bar {
+                margin: 1rem 0;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <a href="index.html" style="text-decoration: none;">
+                <div class="logo-text">CarAxis360</div>
+            </a>
+            <div class="search-bar">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="search-input" id="searchInput" placeholder="Search cars, brands, prices...">
+            </div>
+            <div style="display: flex; gap: 1.5rem; align-items: center;">
+                <span style="color: var(--text-secondary); font-size: 0.9rem;">2026 Models</span>
+                <a href="index.html" style="color: var(--accent); text-decoration: none; font-size: 0.9rem; font-weight: 600; padding: 0.6rem 1.2rem; border: 1px solid var(--accent); border-radius: 20px; transition: all 0.3s;" onmouseover="this.style.background='rgba(0, 229, 255, 0.1)'" onmouseout="this.style.background='transparent'">← Back to Home</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Brands Section -->
+        <div class="brands-section">
+            <div class="section-title">
+                Browse by Brand
+            </div>
+            <div class="brands-grid" id="brandsGrid">
+                <!-- Brands will be dynamically inserted -->
+            </div>
+        </div>
+
+        <!-- Cars Section -->
+        <div class="section-title" id="carsTitle" style="display: none;">
+            <span id="brandTitle">All Cars</span>
+            <span style="color: var(--text-secondary); font-size: 1rem; font-weight: 400;"> • <span id="carCount">0</span> models</span>
+        </div>
+        <div class="cars-grid" id="carsGrid">
+            <div class="loading">Select a brand to view cars...</div>
+        </div>
+    </div>
+
+    <script>
+        // Car Database - 2026 Models with ACTUAL Brand Logos
+        const carDatabase = {
+            maruti: {
+                name: "Maruti Suzuki",
+                logo: "https://stimg.cardekho.com/pwa/img/brandLogo_168x84/maruti.jpg",
+                cars: [
+                    { name: "Swift", price: "₹6.49L - ₹9.64L", fuel: "Petrol/CNG", seating: "5", type: "Hatchback", features: ["AMT", "360 Camera", "Sunroof"], image: "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=500" },
+                    { name: "Baleno", price: "₹6.66L - ₹9.88L", fuel: "Petrol/CNG", seating: "5", type: "Premium Hatch", features: ["HUD", "Wireless Charger", "Cruise Control"], image: "https://images.unsplash.com/photo-1619405399517-d7fce0f13302?w=500" },
+                    { name: "Dzire", price: "₹6.51L - ₹9.39L", fuel: "Petrol/CNG", seating: "5", type: "Sedan", features: ["AMT", "LED Lights", "ABS"], image: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=500" },
+                    { name: "Brezza", price: "₹8.34L - ₹14.14L", fuel: "Petrol/CNG", seating: "5", type: "Compact SUV", features: ["Sunroof", "6 Airbags", "AWD"], image: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=500" },
+                    { name: "Ertiga", price: "₹8.64L - ₹13.13L", fuel: "Petrol/CNG", seating: "7", type: "MPV", features: ["Smart Hybrid", "Captain Seats", "Cruise"], image: "https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=500" },
+                    { name: "Grand Vitara", price: "₹10.70L - ₹20.10L", fuel: "Petrol/Hybrid", seating: "5", type: "Mid-size SUV", features: ["Strong Hybrid", "Panoramic", "AWD"], new: true, image: "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=500" }
+                ]
+            },
+            hyundai: {
+                name: "Hyundai",
+                logo: "https://stimg.cardekho.com/pwa/img/brandLogo_168x84/hyundai.jpg",
+                cars: [
+                    { name: "i10 NIOS", price: "₹5.92L - ₹8.55L", fuel: "Petrol/CNG", seating: "5", type: "Hatchback", features: ["Turbo", "Wireless Charger", "Sunroof"], image: "https://images.unsplash.com/photo-1609521263047-f8f205293f24?w=500" },
+                    { name: "i20", price: "₹7.04L - ₹11.21L", fuel: "Petrol/Turbo", seating: "5", type: "Premium Hatch", features: ["Turbo", "Sunroof", "Bose Audio"], image: "https://images.unsplash.com/photo-1609521263047-f8f205293f24?w=500" },
+                    { name: "Venue", price: "₹7.94L - ₹13.48L", fuel: "Petrol/Diesel", seating: "5", type: "Compact SUV", features: ["Blue Link", "Sunroof", "Turbo"], image: "https://images.unsplash.com/photo-1600712242805-5f78671b24da?w=500" },
+                    { name: "Creta", price: "₹11.00L - ₹20.30L", fuel: "Petrol/Diesel", seating: "5", type: "Mid-size SUV", features: ["Panoramic", "ADAS", "Ventilated Seats"], image: "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=500" },
+                    { name: "Alcazar", price: "₹16.77L - ₹21.28L", fuel: "Petrol/Diesel", seating: "7", type: "3-row SUV", features: ["Panoramic", "ADAS", "Captain Seats"], image: "https://images.unsplash.com/photo-1609521263047-f8f205293f24?w=500" },
+                    { name: "Tucson", price: "₹29.02L - ₹35.94L", fuel: "Petrol/Diesel", seating: "5", type: "Premium SUV", features: ["ADAS Level 2", "Panoramic", "AWD"], image: "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=500" }
+                ]
+            },
+            tata: {
+                name: "Tata Motors",
+                logo: "https://stimg.cardekho.com/pwa/img/brandLogo_168x84/tata.jpg",
+                cars: [
+                    { name: "Tiago", price: "₹5.65L - ₹8.90L", fuel: "Petrol/CNG", seating: "5", type: "Hatchback", features: ["AMT", "Touchscreen", "LED DRL"], image: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=500" },
+                    { name: "Altroz", price: "₹6.60L - ₹10.74L", fuel: "Petrol/Diesel", seating: "5", type: "Premium Hatch", features: ["Turbo", "iRA", "Sunroof"], image: "https://images.unsplash.com/photo-1619405399517-d7fce0f13302?w=500" },
+                    { name: "Nexon", price: "₹8.15L - ₹15.20L", fuel: "Petrol/Diesel", seating: "5", type: "Compact SUV", features: ["Turbo", "Sunroof", "JBL Audio"], image: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=500" },
+                    { name: "Nexon EV", price: "₹14.49L - ₹19.29L", fuel: "Electric", seating: "5", type: "Compact SUV", features: ["465km Range", "Fast Charge", "iRA"], new: true, image: "https://images.unsplash.com/photo-1593941707874-ef25b8b4a92b?w=500" },
+                    { name: "Harrier", price: "₹16.19L - ₹26.44L", fuel: "Diesel", seating: "5", type: "Mid-size SUV", features: ["Panoramic", "ADAS", "JBL"], image: "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=500" },
+                    { name: "Safari", price: "₹16.19L - ₹27.34L", fuel: "Diesel", seating: "7", type: "3-row SUV", features: ["ADAS", "Panoramic", "Captain Seats"], image: "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=500" }
+                ]
+            },
+            mahindra: {
+                name: "Mahindra",
+                logo: "https://stimg.cardekho.com/pwa/img/brandLogo_168x84/mahindra.jpg",
+                cars: [
+                    { name: "XUV300", price: "₹8.41L - ₹14.73L", fuel: "Petrol/Diesel", seating: "5", type: "Compact SUV", features: ["7 Airbags", "Sunroof", "Auto Park"], image: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=500" },
+                    { name: "Scorpio N", price: "₹13.60L - ₹24.54L", fuel: "Petrol/Diesel", seating: "7", type: "SUV", features: ["4WD", "ADAS", "Panoramic"], new: true, image: "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=500" },
+                    { name: "XUV700", price: "₹13.99L - ₹25.49L", fuel: "Petrol/Diesel", seating: "7", type: "Premium SUV", features: ["ADAS L2", "Sky Roof", "AWD"], new: true, image: "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=500" },
+                    { name: "Thar", price: "₹11.25L - ₹17.60L", fuel: "Petrol/Diesel", seating: "4", type: "Off-roader", features: ["4x4", "Convertible", "Terrain Modes"], image: "https://images.unsplash.com/photo-1581540222194-0def2dda95b8?w=500" },
+                    { name: "Bolero", price: "₹9.90L - ₹10.91L", fuel: "Diesel", seating: "7", type: "MUV", features: ["4WD", "Ladder Frame", "Robust"], image: "https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=500" }
+                ]
+            },
+            kia: {
+                name: "Kia",
+                logo: "https://stimg.cardekho.com/pwa/img/brandLogo_168x84/kia.jpg",
+                cars: [
+                    { name: "Sonet", price: "₹7.99L - ₹15.72L", fuel: "Petrol/Diesel", seating: "5", type: "Compact SUV", features: ["Sunroof", "Turbo", "Ventilated Seats"], image: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=500" },
+                    { name: "Seltos", price: "₹10.90L - ₹20.35L", fuel: "Petrol/Diesel", seating: "5", type: "Mid-size SUV", features: ["Panoramic", "ADAS", "Turbo"], image: "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=500" },
+                    { name: "Carens", price: "₹10.52L - ₹19.69L", fuel: "Petrol/Diesel", seating: "7", type: "MPV", features: ["Panoramic", "Captain Seats", "ADAS"], new: true, image: "https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=500" },
+                    { name: "EV6", price: "₹60.97L - ₹65.97L", fuel: "Electric", seating: "5", type: "Electric SUV", features: ["528km Range", "AWD", "800V"], new: true, image: "https://images.unsplash.com/photo-1593941707874-ef25b8b4a92b?w=500" }
+                ]
+            },
+            toyota: {
+                name: "Toyota",
+                logo: "https://stimg.cardekho.com/pwa/img/brandLogo_168x84/toyota.jpg",
+                cars: [
+                    { name: "Glanza", price: "₹6.86L - ₹10.14L", fuel: "Petrol/CNG", seating: "5", type: "Hatchback", features: ["HUD", "Cruise Control", "Touchscreen"], image: "https://images.unsplash.com/photo-1619405399517-d7fce0f13302?w=500" },
+                    { name: "Urban Cruiser Hyryder", price: "₹11.14L - ₹20.19L", fuel: "Petrol/Hybrid", seating: "5", type: "Mid-size SUV", features: ["Strong Hybrid", "Panoramic", "AWD"], new: true, image: "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=500" },
+                    { name: "Innova Crysta", price: "₹19.99L - ₹26.55L", fuel: "Petrol/Diesel", seating: "8", type: "MPV", features: ["Captain Seats", "Cruise", "Touchscreen"], image: "https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=500" },
+                    { name: "Fortuner", price: "₹33.43L - ₹51.44L", fuel: "Diesel", seating: "7", type: "Premium SUV", features: ["4WD", "Ventilated Seats", "JBL"], image: "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=500" },
+                    { name: "Camry Hybrid", price: "₹46.17L", fuel: "Hybrid", seating: "5", type: "Sedan", features: ["Hybrid", "Luxury", "JBL Audio"], image: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=500" }
+                ]
+            },
+            honda: {
+                name: "Honda",
+                logo: "https://stimg.cardekho.com/pwa/img/brandLogo_168x84/honda.jpg",
+                cars: [
+                    { name: "Amaze", price: "₹7.99L - ₹10.90L", fuel: "Petrol", seating: "5", type: "Sedan", features: ["CVT", "Cruise Control", "Sunroof"], image: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=500" },
+                    { name: "City", price: "₹11.82L - ₹16.35L", fuel: "Petrol/Hybrid", seating: "5", type: "Sedan", features: ["Hybrid", "Sunroof", "Cruise"], image: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=500" },
+                    { name: "City e:HEV", price: "₹17.89L - ₹19.89L", fuel: "Hybrid", seating: "5", type: "Sedan", features: ["Strong Hybrid", "Sunroof", "Alexa"], new: true, image: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=500" },
+                    { name: "Elevate", price: "₹11.58L - ₹16.71L", fuel: "Petrol", seating: "5", type: "Compact SUV", features: ["Sunroof", "ADAS", "Panoramic"], new: true, image: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=500" }
+                ]
+            },
+            mg: {
+                name: "MG Motor",
+                logo: "https://stimg.cardekho.com/pwa/img/brandLogo_168x84/mg.jpg",
+                cars: [
+                    { name: "Comet EV", price: "₹7.98L - ₹9.98L", fuel: "Electric", seating: "4", type: "City EV", features: ["230km Range", "Compact", "Digital Dash"], new: true, image: "https://images.unsplash.com/photo-1593941707874-ef25b8b4a92b?w=500" },
+                    { name: "Astor", price: "₹9.98L - ₹18.58L", fuel: "Petrol", seating: "5", type: "Compact SUV", features: ["ADAS L2", "AI Assistant", "Panoramic"], image: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=500" },
+                    { name: "Hector", price: "₹15.19L - ₹24.26L", fuel: "Petrol/Diesel", seating: "5/7", type: "Mid-size SUV", features: ["Panoramic", "7 Seats", "iSmart"], image: "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=500" },
+                    { name: "ZS EV", price: "₹21.99L - ₹26.28L", fuel: "Electric", seating: "5", type: "Electric SUV", features: ["461km Range", "Fast Charge", "i-Smart"], image: "https://images.unsplash.com/photo-1593941707874-ef25b8b4a92b?w=500" }
+                ]
+            },
+            skoda: {
+                name: "Skoda",
+                logo: "https://stimg.cardekho.com/pwa/img/brandLogo_168x84/skoda.jpg",
+                cars: [
+                    { name: "Kushaq", price: "₹11.89L - ₹20.49L", fuel: "Petrol/Turbo", seating: "5", type: "Mid-size SUV", features: ["Turbo", "Sunroof", "Virtual Cockpit"], image: "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=500" },
+                    { name: "Slavia", price: "₹11.39L - ₹19.19L", fuel: "Petrol/Turbo", seating: "5", type: "Sedan", features: ["Turbo", "Sunroof", "Ventilated Seats"], image: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=500" },
+                    { name: "Kodiaq", price: "₹39.99L - ₹42.99L", fuel: "Petrol/Turbo", seating: "7", type: "Premium SUV", features: ["AWD", "Panoramic", "Virtual Cockpit"], image: "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=500" }
+                ]
+            },
+            volkswagen: {
+                name: "Volkswagen",
+                logo: "https://stimg.cardekho.com/pwa/img/brandLogo_168x84/volkswagen.jpg",
+                cars: [
+                    { name: "Taigun", price: "₹11.70L - ₹20.30L", fuel: "Petrol/Turbo", seating: "5", type: "Mid-size SUV", features: ["Turbo", "Sunroof", "Digital Cockpit"], image: "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=500" },
+                    { name: "Virtus", price: "₹11.56L - ₹19.41L", fuel: "Petrol/Turbo", seating: "5", type: "Sedan", features: ["Turbo", "Sunroof", "Ventilated Seats"], image: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=500" },
+                    { name: "Tiguan", price: "₹35.17L - ₹37.07L", fuel: "Petrol/Turbo", seating: "7", type: "Premium SUV", features: ["AWD", "Panoramic", "Digital Cockpit"], image: "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=500" }
+                ]
+            },
+            nissan: {
+                name: "Nissan",
+                logo: "https://stimg.cardekho.com/pwa/img/brandLogo_168x84/nissan.jpg",
+                cars: [
+                    { name: "Magnite", price: "₹6.02L - ₹11.27L", fuel: "Petrol/Turbo", seating: "5", type: "Compact SUV", features: ["Turbo", "Sunroof", "Wireless Charger"], image: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=500" },
+                    { name: "X-Trail", price: "₹49.92L", fuel: "Petrol/Hybrid", seating: "7", type: "Premium SUV", features: ["e-Power Hybrid", "AWD", "ProPILOT"], new: true, image: "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=500" }
+                ]
+            },
+            renault: {
+                name: "Renault",
+                logo: "https://stimg.cardekho.com/pwa/img/brandLogo_168x84/renault.jpg",
+                cars: [
+                    { name: "Kwid", price: "₹4.70L - ₹6.45L", fuel: "Petrol", seating: "5", type: "Entry Hatchback", features: ["Touchscreen", "Digital Cluster", "AMT"], image: "https://images.unsplash.com/photo-1619405399517-d7fce0f13302?w=500" },
+                    { name: "Kiger", price: "₹6.00L - ₹11.23L", fuel: "Petrol/Turbo", seating: "5", type: "Compact SUV", features: ["Turbo", "Wireless Charger", "LED DRL"], image: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=500" }
+                ]
+            },
+            bmw: {
+                name: "BMW",
+                logo: "https://stimg.cardekho.com/pwa/img/brandLogo_168x84/bmw.jpg",
+                cars: [
+                    { name: "2 Series Gran Coupe", price: "₹42.30L - ₹44.50L", fuel: "Petrol/Diesel", seating: "5", type: "Luxury Sedan", features: ["M Sport", "Sunroof", "iDrive"], image: "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=500" },
+                    { name: "3 Series", price: "₹49.90L - ₹62.90L", fuel: "Petrol/Diesel", seating: "5", type: "Luxury Sedan", features: ["M Sport", "Panoramic", "Driver Assist"], new: true, image: "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=500" },
+                    { name: "X1", price: "₹48.50L - ₹56.50L", fuel: "Petrol/Diesel", seating: "5", type: "Luxury SUV", features: ["Panoramic", "HUD", "Ambient Light"], image: "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=500" },
+                    { name: "iX", price: "₹1.21Cr - ₹1.41Cr", fuel: "Electric", seating: "5", type: "Electric SUV", features: ["600km Range", "Level 2 ADAS", "BMW Live Cockpit"], new: true, image: "https://images.unsplash.com/photo-1593941707874-ef25b8b4a92b?w=500" }
+                ]
+            },
+            mercedesbenz: {
+                name: "Mercedes-Benz",
+                logo: "https://stimg.cardekho.com/pwa/img/brandLogo_168x84/mercedes-benz.jpg",
+                cars: [
+                    { name: "A-Class Limousine", price: "₹46.05L - ₹48.55L", fuel: "Petrol", seating: "5", type: "Luxury Sedan", features: ["MBUX", "Panoramic", "AMG Line"], image: "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=500" },
+                    { name: "C-Class", price: "₹60.00L - ₹66.00L", fuel: "Petrol", seating: "5", type: "Luxury Sedan", features: ["MBUX", "Burmester Audio", "ADAS L2"], new: true, image: "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=500" },
+                    { name: "GLA", price: "₹51.75L - ₹58.15L", fuel: "Petrol", seating: "5", type: "Luxury SUV", features: ["MBUX", "Panoramic", "AMG"], image: "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=500" },
+                    { name: "EQS", price: "₹1.55Cr - ₹2.45Cr", fuel: "Electric", seating: "5", type: "Electric Sedan", features: ["770km Range", "Hyperscreen", "Level 3 ADAS"], new: true, image: "https://images.unsplash.com/photo-1593941707874-ef25b8b4a92b?w=500" }
+                ]
+            },
+            audi: {
+                name: "Audi",
+                logo: "https://stimg.cardekho.com/pwa/img/brandLogo_168x84/audi.jpg",
+                cars: [
+                    { name: "A4", price: "₹46.02L - ₹54.58L", fuel: "Petrol", seating: "5", type: "Luxury Sedan", features: ["Virtual Cockpit", "MMI", "Quattro"], image: "https://images.unsplash.com/photo-1606220588913-b3aacb4d2f46?w=500" },
+                    { name: "Q3", price: "₹44.89L - ₹53.58L", fuel: "Petrol", seating: "5", type: "Luxury SUV", features: ["Virtual Cockpit", "Panoramic", "S Line"], image: "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=500" },
+                    { name: "e-tron GT", price: "₹1.80Cr - ₹2.05Cr", fuel: "Electric", seating: "5", type: "Electric Sports", features: ["500km Range", "Quattro AWD", "Matrix LED"], new: true, image: "https://images.unsplash.com/photo-1593941707874-ef25b8b4a92b?w=500" }
+                ]
+            },
+            jeep: {
+                name: "Jeep",
+                logo: "https://stimg.cardekho.com/pwa/img/brandLogo_168x84/jeep.jpg",
+                cars: [
+                    { name: "Compass", price: "₹20.49L - ₹33.74L", fuel: "Petrol/Diesel", seating: "5", type: "SUV", features: ["4x4", "Panoramic", "Uconnect"], image: "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=500" },
+                    { name: "Meridian", price: "₹33.90L - ₹40.35L", fuel: "Diesel", seating: "7", type: "3-row SUV", features: ["4x4", "Panoramic", "Ventilated Seats"], new: true, image: "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=500" }
+                ]
+            },
+            citroen: {
+                name: "Citroën",
+                logo: "https://stimg.cardekho.com/pwa/img/brandLogo_168x84/citroen.jpg",
+                cars: [
+                    { name: "C3", price: "₹6.16L - ₹8.65L", fuel: "Petrol", seating: "5", type: "Compact SUV", features: ["Touchscreen", "LED DRL", "Dual Tone"], image: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=500" },
+                    { name: "C3 Aircross", price: "₹9.99L - ₹13.99L", fuel: "Petrol/Turbo", seating: "5", type: "Compact SUV", features: ["Turbo", "Panoramic", "Modular Seats"], new: true, image: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=500" }
+                ]
+            }
+        };
+
+        let currentBrand = null;
+        let allCars = [];
+
+        // Initialize
+        function init() {
+            renderBrands();
+            setupSearch();
+        }
+
+        // Render Brands
+        function renderBrands() {
+            const brandsGrid = document.getElementById('brandsGrid');
+            brandsGrid.innerHTML = '';
+
+            Object.keys(carDatabase).forEach(brandKey => {
+                const brand = carDatabase[brandKey];
+                const brandCard = document.createElement('div');
+                brandCard.className = 'brand-card';
+                brandCard.onclick = () => selectBrand(brandKey);
+                
+                brandCard.innerHTML = `
+                    <img src="${brand.logo}" 
+                         alt="${brand.name}" 
+                         class="brand-logo"
+                         loading="lazy">
+                    <div class="brand-name">${brand.name}</div>
+                    <div class="brand-count">${brand.cars.length} models</div>
+                `;
+                
+                brandsGrid.appendChild(brandCard);
+            });
+        }
+
+        // Select Brand
+        function selectBrand(brandKey) {
+            currentBrand = brandKey;
+            const brand = carDatabase[brandKey];
+            
+            // Update active brand
+            document.querySelectorAll('.brand-card').forEach((card, index) => {
+                card.classList.remove('active');
+                if (Object.keys(carDatabase)[index] === brandKey) {
+                    card.classList.add('active');
+                }
+            });
+
+            // Show cars
+            document.getElementById('carsTitle').style.display = 'flex';
+            document.getElementById('brandTitle').textContent = brand.name;
+            document.getElementById('carCount').textContent = brand.cars.length;
+            
+            renderCars(brand.cars);
+        }
+
+        // Render Cars
+        function renderCars(cars) {
+            const carsGrid = document.getElementById('carsGrid');
+            carsGrid.innerHTML = '';
+            carsGrid.style.opacity = '0';
+
+            setTimeout(() => {
+                cars.forEach(car => {
+                    const carCard = createCarCard(car);
+                    carsGrid.appendChild(carCard);
+                });
+                carsGrid.style.opacity = '1';
+            }, 100);
+        }
+
+        // Create Car Card
+        function createCarCard(car) {
+            const card = document.createElement('div');
+            card.className = 'car-card';
+            
+            card.innerHTML = `
+                <div class="car-image-container">
+                    <img src="${car.image}" alt="${car.name}" class="car-image">
+                    ${car.new ? '<div class="badge new">2026 New</div>' : ''}
+                </div>
+                <div class="car-details">
+                    <div class="car-name">${car.name}</div>
+                    <div class="car-price">${car.price}</div>
+                    <div class="car-specs">
+                        <div class="spec-item">
+                            <div class="spec-label">Fuel</div>
+                            <div class="spec-value">${car.fuel}</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Seats</div>
+                            <div class="spec-value">${car.seating}</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">Type</div>
+                            <div class="spec-value">${car.type}</div>
+                        </div>
+                    </div>
+                    <div class="car-features">
+                        ${car.features.map(f => `<span class="feature-tag">${f}</span>`).join('')}
+                    </div>
+                    <div class="car-cta">
+                        <button class="btn btn-primary" onclick="alert('View 360° coming soon!')">View 360°</button>
+                        <button class="btn btn-secondary" onclick="alert('Compare feature coming soon!')">Compare</button>
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        // Search Functionality
+        function setupSearch() {
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase();
+                
+                if (query.length === 0) {
+                    if (currentBrand) {
+                        renderCars(carDatabase[currentBrand].cars);
+                    }
+                    return;
+                }
+
+                // Search all cars
+                let results = [];
+                Object.keys(carDatabase).forEach(brandKey => {
+                    const brand = carDatabase[brandKey];
+                    const matchedCars = brand.cars.filter(car => 
+                        car.name.toLowerCase().includes(query) ||
+                        car.type.toLowerCase().includes(query) ||
+                        car.fuel.toLowerCase().includes(query) ||
+                        brand.name.toLowerCase().includes(query)
+                    );
+                    results = results.concat(matchedCars);
+                });
+
+                document.getElementById('carsTitle').style.display = 'flex';
+                document.getElementById('brandTitle').textContent = 'Search Results';
+                document.getElementById('carCount').textContent = results.length;
+                
+                if (results.length > 0) {
+                    renderCars(results);
+                } else {
+                    document.getElementById('carsGrid').innerHTML = '<div class="empty-state"><h3>No cars found</h3><p>Try a different search term</p></div>';
+                }
+            });
+        }
+
+        // Initialize on load
+        init();
+    </script>
+</body>
+</html>
