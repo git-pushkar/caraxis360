@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CarAxis360 - See Every Angle Before You Buy | India's 3D Car Platform</title>
     <meta name="description" content="Experience cars in stunning 360° 3D before you buy. Real owner reviews, detailed comparisons, and complete buying guides. India's most advanced car discovery platform.">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='f1'%3E%3Cstop offset='0%25' stop-color='%23667eea'/%3E%3Cstop offset='100%25' stop-color='%2300f2fe'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' fill='%23000' rx='12'/%3E%3Cg transform='translate(32,32)'%3E%3Cellipse cx='0' cy='0' rx='24' ry='7' fill='none' stroke='url(%23f1)' stroke-width='2'/%3E%3Cellipse cx='0' cy='0' rx='24' ry='7' fill='none' stroke='url(%23f1)' stroke-width='2' transform='rotate(60)'/%3E%3Cellipse cx='0' cy='0' rx='24' ry='7' fill='none' stroke='url(%23f1)' stroke-width='2' transform='rotate(120)'/%3E%3Cg transform='scale(0.25)'%3E%3Cpath d='M -40,-4 L 10,-7 L 35,-3' fill='%23DC0000'/%3E%3Cpath d='M -10,-4 L 25,6 L -10,6 Z' fill='%23DC0000'/%3E%3Ccircle cx='-30' cy='8' r='6' fill='%23fff'/%3E%3Ccircle cx='28' cy='8' r='6' fill='%23fff'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.crossorigin" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -14,6 +18,93 @@
             padding: 0;
             box-sizing: border-box;
         }
+
+        /* ═══════════════════════════════════════════════════════
+           CINEMATIC INTRO - CarAxis360
+        ═══════════════════════════════════════════════════════ */
+        #intro-screen {
+            position: fixed; inset: 0; z-index: 9999; background: #000;
+            display: flex; align-items: center; justify-content: center;
+            flex-direction: column; overflow: hidden;
+        }
+        #intro-screen.fade-out { 
+            animation: introFadeOut 1.2s cubic-bezier(0.4,0,0.2,1) forwards; 
+        }
+        @keyframes introFadeOut {
+            0%   { opacity:1; transform:scale(1); }
+            60%  { opacity:1; transform:scale(1.04); }
+            100% { opacity:0; transform:scale(1.08); pointer-events:none; }
+        }
+        
+        #intro-globe { 
+            position:absolute; inset:0; z-index:1; opacity:0; 
+            animation:globeAppear 1.4s 1.0s ease forwards; 
+        }
+        @keyframes globeAppear { 
+            0%{opacity:0;transform:scale(0.6) rotate(-8deg)} 
+            100%{opacity:1;transform:scale(1) rotate(0deg)} 
+        }
+        
+        #intro-scanlines {
+            position:absolute; inset:0; z-index:4; pointer-events:none; opacity:0.3;
+            background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.07) 2px,rgba(0,0,0,0.07) 4px);
+        }
+        
+        #intro-vignette {
+            position:absolute; inset:0; z-index:4; pointer-events:none;
+            background:radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,0.80) 100%);
+        }
+        
+        #intro-text { 
+            position:absolute; z-index:5; text-align:center; 
+            display:flex; flex-direction:column; align-items:center; gap:20px; 
+        }
+        
+        .intro-tagline {
+            font-family:'Space Grotesk',sans-serif; font-size:clamp(11px,1.2vw,14px);
+            letter-spacing:0.35em; text-transform:uppercase; color:rgba(0, 229, 255, 0.6);
+            opacity:0; animation:fadeSlideUp 0.8s ease forwards;
+        }
+        .intro-tagline:nth-child(1){ animation-delay:1.4s; }
+        
+        .intro-logo-text {
+            font-family:'Space Grotesk',sans-serif; font-size:clamp(60px,12vw,140px);
+            font-weight:900; letter-spacing:0.20em;
+            background:linear-gradient(135deg, #667eea 0%, #00f2fe 45%, #f093fb 100%);
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+            opacity:0; animation:logoReveal 1.1s 1.7s cubic-bezier(0.16,1,0.3,1) forwards;
+        }
+        @keyframes logoReveal {
+            0%  { opacity:0; letter-spacing:0.65em; filter:blur(20px); }
+            100%{ opacity:1; letter-spacing:0.20em; filter:blur(0); }
+        }
+        
+        .intro-sub {
+            font-family:'Space Grotesk',sans-serif; font-size:clamp(11px,1.2vw,13px);
+            letter-spacing:0.32em; text-transform:uppercase; color:rgba(255,255,255,0.45);
+            opacity:0; animation:fadeSlideUp 0.8s 2.3s ease forwards;
+        }
+        @keyframes fadeSlideUp { 
+            0%{opacity:0;transform:translateY(14px)} 
+            100%{opacity:1;transform:translateY(0)} 
+        }
+        
+        #intro-skip {
+            position:absolute; bottom:40px; right:45px; z-index:10;
+            font-family:'Space Grotesk',sans-serif; font-size:11px; letter-spacing:0.2em;
+            text-transform:uppercase; color:rgba(255,255,255,0.4); cursor:pointer;
+            border:1px solid rgba(0, 229, 255, 0.2); padding:10px 22px; border-radius:25px;
+            transition:all 0.3s; opacity:0; animation:fadeSlideUp 0.6s 1.2s ease forwards;
+            background: rgba(0, 229, 255, 0.05);
+        }
+        #intro-skip:hover { 
+            color:#00E5FF; border-color:#00E5FF; 
+            background: rgba(0, 229, 255, 0.15);
+            transform: translateY(-2px);
+        }
+        
+        body.intro-active { overflow:hidden; }
+        body.intro-active > *:not(#intro-screen) { visibility:hidden; }
 
         :root {
             --primary: #0A0E27;
@@ -100,11 +191,22 @@
         }
 
         .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+        }
+        
+        .logo-text {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: 700;
-            letter-spacing: -0.5px;
-            background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+            letter-spacing: 0.5px;
+            background: linear-gradient(135deg, #E0E0E0, #FFFFFF, #C0C0C0);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -268,7 +370,7 @@
                 transparent 0deg 340deg,
                 var(--accent) 340deg 360deg
             );
-            animation: rotate 4s linear infinite;
+            animation: rotate 6s linear infinite;
         }
 
         @keyframes rotate {
@@ -288,15 +390,61 @@
             padding: 3rem;
         }
 
-        .car-icon {
-            font-size: 8rem;
+        .car-3d-container {
+            width: 100%;
+            height: 350px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            perspective: 1000px;
             margin-bottom: 2rem;
-            animation: float 3s ease-in-out infinite;
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(5deg); }
+        .ferrari-3d {
+            width: 400px;
+            height: 200px;
+            transform-style: preserve-3d;
+            animation: rotateFerrari 8s ease-in-out infinite;
+        }
+
+        @keyframes rotateFerrari {
+            0%, 100% { transform: rotateY(-20deg) rotateX(5deg); }
+            50% { transform: rotateY(20deg) rotateX(-5deg); }
+        }
+
+        .car-icon {
+            display: none;
+        }
+
+        .car-3d-container {
+            width: 100%;
+            height: 350px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            perspective: 1200px;
+            margin-bottom: 2rem;
+        }
+
+        .ferrari-3d {
+            width: 400px;
+            height: 200px;
+            transform-style: preserve-3d;
+            animation: rotateFerrari 12s ease-in-out infinite;
+            filter: drop-shadow(0 10px 30px rgba(0, 229, 255, 0.3));
+        }
+
+        @keyframes rotateFerrari {
+            0%, 100% { 
+                transform: perspective(1200px) rotateY(-15deg) rotateX(3deg) translateZ(0); 
+            }
+            50% { 
+                transform: perspective(1200px) rotateY(15deg) rotateX(-3deg) translateZ(20px); 
+            }
+        }
+
+        .ferrari-3d:hover {
+            animation-play-state: paused;
         }
 
         .rotation-hint {
@@ -578,7 +726,31 @@
         }
     </style>
 </head>
-<body>
+<body class="intro-active">
+    <!-- ═══════════════════════════════════════════════════════
+         CINEMATIC INTRO - CarAxis360
+    ═══════════════════════════════════════════════════════ -->
+    <div id="intro-screen">
+        <!-- Globe Background -->
+        <div id="intro-globe">
+            <canvas id="globeCanvas" style="width:100%;height:100%;"></canvas>
+        </div>
+        
+        <!-- Scanlines & Vignette -->
+        <div id="intro-scanlines"></div>
+        <div id="intro-vignette"></div>
+        
+        <!-- Main Text -->
+        <div id="intro-text">
+            <div class="intro-tagline">INDIA'S PREMIER</div>
+            <div class="intro-logo-text">CARAXIS360</div>
+            <div class="intro-sub">SEE EVERY ANGLE</div>
+        </div>
+        
+        <!-- Skip Button -->
+        <div id="intro-skip">SKIP INTRO</div>
+    </div>
+
     <!-- Loading Screen -->
     <div class="loading">
         <div class="loader"></div>
@@ -591,9 +763,72 @@
     <!-- Header -->
     <header>
         <nav>
-            <div class="logo">CarAxis360</div>
+            <div class="logo">
+                <svg class="logo-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="logoHolo" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#667eea"/>
+                            <stop offset="50%" style="stop-color:#f093fb"/>
+                            <stop offset="100%" style="stop-color:#00f2fe"/>
+                        </linearGradient>
+                        <linearGradient id="logoChrome">
+                            <stop offset="0%" style="stop-color:#E0E0E0"/>
+                            <stop offset="50%" style="stop-color:#FFFFFF"/>
+                            <stop offset="100%" style="stop-color:#C0C0C0"/>
+                        </linearGradient>
+                        <filter id="logoGlow">
+                            <feGaussianBlur stdDeviation="1.5"/>
+                            <feMerge>
+                                <feMergeNode in="coloredBlur"/>
+                                <feMergeNode in="SourceGraphic"/>
+                            </feMerge>
+                        </filter>
+                    </defs>
+                    <g transform="translate(50, 50)">
+                        <ellipse cx="0" cy="0" rx="38" ry="11" fill="none" stroke="url(#logoHolo)" stroke-width="2" opacity="0.9"/>
+                        <ellipse cx="0" cy="0" rx="38" ry="11" fill="none" stroke="url(#logoHolo)" stroke-width="2" opacity="0.7" transform="rotate(60)"/>
+                        <ellipse cx="0" cy="0" rx="38" ry="11" fill="none" stroke="url(#logoHolo)" stroke-width="2" opacity="0.7" transform="rotate(120)"/>
+                        
+                        <g transform="scale(0.35)">
+                            <rect x="-40" y="-18" width="6" height="2" rx="1" fill="#DC0000"/>
+                            <rect x="-40" y="-15" width="6" height="2" rx="1" fill="#DC0000"/>
+                            <rect x="-41" y="-20" width="1.5" height="10" fill="#1a1a1a"/>
+                            
+                            <path d="M -40,-4 L -20,-7 L 10,-7 L 35,-3" fill="#DC0000" stroke="#8B0000" stroke-width="1.2"/>
+                            <path d="M -10,-4 L 15,-4 L 25,6 L -10,6 Z" fill="#DC0000" stroke="#8B0000" stroke-width="1.2"/>
+                            <rect x="-8" y="-10" width="8" height="4" rx="1" fill="#1a1a1a"/>
+                            
+                            <path d="M -12,-8 Q -14,-12 -12,-14 Q -10,-12 -12,-8" fill="none" stroke="#C0C0C0" stroke-width="1.8"/>
+                            <ellipse cx="-12" cy="-6" rx="6" ry="3" fill="rgba(0,0,0,0.6)"/>
+                            
+                            <path d="M 25,-3 L 42,-1 L 44,2 L 35,2 L 25,3" fill="#DC0000" stroke="#8B0000" stroke-width="1"/>
+                            
+                            <g transform="translate(42, 0)">
+                                <path d="M 0,-4 L 6,-5 L 8,-2" fill="none" stroke="url(#logoHolo)" stroke-width="1.2"/>
+                                <path d="M 0,-2 L 6,-3 L 8,0" fill="none" stroke="url(#logoHolo)" stroke-width="1.2"/>
+                                <path d="M 0,0 L 6,-1 L 8,2" fill="none" stroke="url(#logoHolo)" stroke-width="1.2"/>
+                            </g>
+                            
+                            <circle cx="-30" cy="8" r="7" fill="#1a1a1a"/>
+                            <circle cx="-30" cy="8" r="5" fill="none" stroke="url(#logoChrome)" stroke-width="2"/>
+                            <circle cx="-30" cy="8" r="2.5" fill="url(#logoHolo)"/>
+                            
+                            <circle cx="28" cy="8" r="7" fill="#1a1a1a"/>
+                            <circle cx="28" cy="8" r="5" fill="none" stroke="url(#logoChrome)" stroke-width="2"/>
+                            <circle cx="28" cy="8" r="2.5" fill="url(#logoHolo)"/>
+                            
+                            <line x1="-35" y1="0" x2="30" y2="-1" stroke="#FFD700" stroke-width="1" opacity="0.8"/>
+                            <circle cx="43" cy="0" r="1.2" fill="#00f2fe" opacity="0.95" filter="url(#logoGlow)"/>
+                        </g>
+                    </g>
+                </svg>
+                <span class="logo-text">CarAxis360</span>
+            </div>
             <div class="nav-links">
                 <a href="#features">Features</a>
+                <a href="cars-browse.html">Cars</a>
+                <a href="#how-it-works">How It Works</a>
+                <a href="#pricing">Pricing</a>
                 <a href="#about">About</a>
                 <button class="btn-waitlist" onclick="scrollToSignup()">Join Waitlist</button>
             </div>
@@ -622,10 +857,242 @@
                 <div class="hero-3d">
                     <div class="car-showcase">
                         <div class="car-showcase-inner">
-                            <div class="car-icon">🚗</div>
+                            <div class="car-3d-container">
+                                <div class="ferrari-3d">
+                                    <svg width="400" height="200" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+                                        <defs>
+                                            <linearGradient id="ferrariRed" x1="0%" y1="0%" x2="100%" y2="100%">
+                                                <stop offset="0%" style="stop-color:#DC0000"/>
+                                                <stop offset="50%" style="stop-color:#FF1744"/>
+                                                <stop offset="100%" style="stop-color:#8B0000"/>
+                                            </linearGradient>
+                                            
+                                            <linearGradient id="carChrome" x1="0%" y1="0%" x2="100%" y2="0%">
+                                                <stop offset="0%" style="stop-color:#C0C0C0"/>
+                                                <stop offset="50%" style="stop-color:#FFFFFF"/>
+                                                <stop offset="100%" style="stop-color:#A8A8A8"/>
+                                            </linearGradient>
+                                            
+                                            <linearGradient id="holographic">
+                                                <stop offset="0%" style="stop-color:#00E5FF"/>
+                                                <stop offset="50%" style="stop-color:#FF3D00"/>
+                                                <stop offset="100%" style="stop-color:#00E5FF"/>
+                                            </linearGradient>
+                                            
+                                            <filter id="carGlow">
+                                                <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                                                <feMerge>
+                                                    <feMergeNode in="coloredBlur"/>
+                                                    <feMergeNode in="SourceGraphic"/>
+                                                </feMerge>
+                                            </filter>
+                                            
+                                            <filter id="shadow">
+                                                <feGaussianBlur in="SourceAlpha" stdDeviation="4"/>
+                                                <feOffset dx="0" dy="8" result="offsetblur"/>
+                                                <feFlood flood-color="#000000" flood-opacity="0.3"/>
+                                                <feComposite in2="offsetblur" operator="in"/>
+                                                <feMerge>
+                                                    <feMergeNode/>
+                                                    <feMergeNode in="SourceGraphic"/>
+                                                </feMerge>
+                                            </filter>
+                                        </defs>
+                                        
+                                        <!-- Shadow under car -->
+                                        <ellipse cx="200" cy="160" rx="120" ry="15" fill="#000" opacity="0.2"/>
+                                        
+                                        <!-- Main Ferrari F1 Car -->
+                                        <g transform="translate(200, 100)">
+                                            
+                                            <!-- REAR WING -->
+                                            <g transform="translate(-110, -15)">
+                                                <rect x="0" y="-35" width="18" height="5" rx="2" fill="url(#ferrariRed)" stroke="#8B0000" stroke-width="1"/>
+                                                <rect x="0" y="-29" width="18" height="5" rx="2" fill="url(#ferrariRed)" stroke="#8B0000" stroke-width="1"/>
+                                                <rect x="-2" y="-38" width="4" height="20" rx="1" fill="#1a1a1a"/>
+                                                <rect x="18" y="-38" width="4" height="20" rx="1" fill="#1a1a1a"/>
+                                            </g>
+                                            
+                                            <!-- CAR BODY -->
+                                            <g filter="url(#shadow)">
+                                                <!-- Engine cover -->
+                                                <path d="M -100,-10 L -80,-15 L -40,-18 L 0,-20 L 50,-18 L 90,-12 L 110,-8" 
+                                                      fill="url(#ferrariRed)" 
+                                                      stroke="#8B0000" 
+                                                      stroke-width="2"/>
+                                                
+                                                <!-- Sidepod -->
+                                                <path d="M -30,-12 L 0,-15 L 60,-12 L 90,-6 L 90,20 L 60,24 L -30,20 Z" 
+                                                      fill="url(#ferrariRed)" 
+                                                      stroke="#8B0000" 
+                                                      stroke-width="2"/>
+                                                
+                                                <!-- Air intake -->
+                                                <rect x="-20" y="-28" width="24" height="12" rx="3" 
+                                                      fill="#1a1a1a" 
+                                                      stroke="url(#holographic)" 
+                                                      stroke-width="1.5"/>
+                                                
+                                                <!-- HALO (cockpit protection) -->
+                                                <g transform="translate(-35, -5)">
+                                                    <path d="M 0,-20 Q -6,-30 0,-35 Q 6,-30 0,-20" 
+                                                          fill="none" 
+                                                          stroke="url(#carChrome)" 
+                                                          stroke-width="5"
+                                                          stroke-linecap="round"/>
+                                                    <line x1="-3" y1="-20" x2="-3" y2="-12" stroke="url(#carChrome)" stroke-width="5"/>
+                                                    <line x1="3" y1="-20" x2="3" y2="-12" stroke="url(#carChrome)" stroke-width="5"/>
+                                                </g>
+                                                
+                                                <!-- Cockpit opening -->
+                                                <ellipse cx="-35" cy="-15" rx="18" ry="8" 
+                                                         fill="rgba(0, 0, 0, 0.7)" 
+                                                         stroke="url(#holographic)" 
+                                                         stroke-width="1.5"/>
+                                                
+                                                <!-- Driver helmet visible -->
+                                                <ellipse cx="-35" cy="-18" rx="8" ry="6" 
+                                                         fill="url(#carChrome)" 
+                                                         opacity="0.6"/>
+                                                
+                                                <!-- Nose cone -->
+                                                <path d="M 90,-8 L 120,-5 L 135,-3 L 140,0 L 135,3 L 120,5 L 90,8" 
+                                                      fill="url(#ferrariRed)" 
+                                                      stroke="#8B0000" 
+                                                      stroke-width="2"/>
+                                                
+                                                <!-- FRONT WING -->
+                                                <g transform="translate(135, 0)">
+                                                    <path d="M 0,-8 L 20,-10 L 25,-8 L 20,-6 L 0,-4" 
+                                                          fill="none" 
+                                                          stroke="url(#holographic)" 
+                                                          stroke-width="3"/>
+                                                    <path d="M 0,-4 L 20,-6 L 25,-4 L 20,-2 L 0,0" 
+                                                          fill="none" 
+                                                          stroke="url(#holographic)" 
+                                                          stroke-width="3"/>
+                                                    <path d="M 0,0 L 20,-2 L 25,0 L 20,2 L 0,4" 
+                                                          fill="none" 
+                                                          stroke="url(#holographic)" 
+                                                          stroke-width="3"/>
+                                                    <path d="M 0,4 L 20,2 L 25,4 L 20,6 L 0,8" 
+                                                          fill="none" 
+                                                          stroke="url(#holographic)" 
+                                                          stroke-width="3"/>
+                                                    <rect x="-3" y="-12" width="5" height="26" rx="1" fill="#1a1a1a"/>
+                                                </g>
+                                                
+                                                <!-- Ferrari branding stripe -->
+                                                <line x1="-90" y1="0" x2="100" y2="-2" 
+                                                      stroke="#FFD700" 
+                                                      stroke-width="3" 
+                                                      opacity="0.8"/>
+                                                
+                                                <!-- Sponsor logos area -->
+                                                <rect x="-40" y="-5" width="25" height="8" rx="2" 
+                                                      fill="#FFD700" 
+                                                      opacity="0.6"/>
+                                                <rect x="20" y="-5" width="25" height="8" rx="2" 
+                                                      fill="#FFFFFF" 
+                                                      opacity="0.5"/>
+                                            </g>
+                                            
+                                            <!-- REAR WHEEL -->
+                                            <g transform="translate(-80, 25)">
+                                                <circle cx="0" cy="0" r="22" 
+                                                        fill="#1a1a1a" 
+                                                        stroke="#2a2a2a" 
+                                                        stroke-width="2"/>
+                                                <circle cx="0" cy="0" r="18" 
+                                                        fill="none" 
+                                                        stroke="url(#carChrome)" 
+                                                        stroke-width="5"/>
+                                                <circle cx="0" cy="0" r="10" 
+                                                        fill="url(#holographic)"/>
+                                                <!-- Pirelli branding -->
+                                                <text x="-12" y="5" 
+                                                      font-family="Arial" 
+                                                      font-size="10" 
+                                                      font-weight="bold" 
+                                                      fill="#FFD700">
+                                                    PIRELLI
+                                                </text>
+                                                <!-- Wheel spokes -->
+                                                <g opacity="0.4">
+                                                    <line x1="-12" y1="0" x2="12" y2="0" stroke="#fff" stroke-width="1.5"/>
+                                                    <line x1="0" y1="-12" x2="0" y2="12" stroke="#fff" stroke-width="1.5"/>
+                                                </g>
+                                            </g>
+                                            
+                                            <!-- FRONT WHEEL -->
+                                            <g transform="translate(85, 25)">
+                                                <circle cx="0" cy="0" r="22" 
+                                                        fill="#1a1a1a" 
+                                                        stroke="#2a2a2a" 
+                                                        stroke-width="2"/>
+                                                <circle cx="0" cy="0" r="18" 
+                                                        fill="none" 
+                                                        stroke="url(#carChrome)" 
+                                                        stroke-width="5"/>
+                                                <circle cx="0" cy="0" r="10" 
+                                                        fill="url(#holographic)"/>
+                                                <text x="-12" y="5" 
+                                                      font-family="Arial" 
+                                                      font-size="10" 
+                                                      font-weight="bold" 
+                                                      fill="#FFD700">
+                                                    PIRELLI
+                                                </text>
+                                                <g opacity="0.4">
+                                                    <line x1="-12" y1="0" x2="12" y2="0" stroke="#fff" stroke-width="1.5"/>
+                                                    <line x1="0" y1="-12" x2="0" y2="12" stroke="#fff" stroke-width="1.5"/>
+                                                </g>
+                                            </g>
+                                            
+                                            <!-- LED Headlights -->
+                                            <circle cx="138" cy="0" r="4" 
+                                                    fill="#00E5FF" 
+                                                    opacity="0.9"
+                                                    filter="url(#carGlow)">
+                                                <animate attributeName="opacity" 
+                                                         values="0.9;1;0.9" 
+                                                         dur="2s" 
+                                                         repeatCount="indefinite"/>
+                                            </circle>
+                                            
+                                            <!-- Rear lights -->
+                                            <circle cx="-110" cy="-5" r="3" 
+                                                    fill="#FF0000" 
+                                                    opacity="0.8"
+                                                    filter="url(#carGlow)">
+                                                <animate attributeName="opacity" 
+                                                         values="0.8;1;0.8" 
+                                                         dur="1.5s" 
+                                                         repeatCount="indefinite"/>
+                                            </circle>
+                                            
+                                            <!-- Speed lines effect -->
+                                            <g opacity="0.3">
+                                                <line x1="-140" y1="-10" x2="-160" y2="-12" stroke="url(#holographic)" stroke-width="1.5">
+                                                    <animate attributeName="x1" values="-140;-120;-140" dur="1s" repeatCount="indefinite"/>
+                                                    <animate attributeName="x2" values="-160;-140;-160" dur="1s" repeatCount="indefinite"/>
+                                                </line>
+                                                <line x1="-140" y1="0" x2="-165" y2="0" stroke="url(#holographic)" stroke-width="2">
+                                                    <animate attributeName="x1" values="-140;-120;-140" dur="1.2s" repeatCount="indefinite"/>
+                                                    <animate attributeName="x2" values="-165;-145;-165" dur="1.2s" repeatCount="indefinite"/>
+                                                </line>
+                                                <line x1="-140" y1="10" x2="-160" y2="12" stroke="url(#holographic)" stroke-width="1.5">
+                                                    <animate attributeName="x1" values="-140;-120;-140" dur="0.9s" repeatCount="indefinite"/>
+                                                    <animate attributeName="x2" values="-160;-140;-160" dur="0.9s" repeatCount="indefinite"/>
+                                                </line>
+                                            </g>
+                                        </g>
+                                    </svg>
+                                </div>
+                            </div>
                             <div class="rotation-hint">
                                 <span class="rotate-icon">🔄</span>
-                                <span>360° Interactive View Coming Soon</span>
+                                <span>Experience cars in stunning 3D • Coming Soon</span>
                             </div>
                         </div>
                     </div>
@@ -703,6 +1170,199 @@
         </div>
     </section>
 
+    <!-- Featured Cars Section -->
+    <section class="features" id="cars" style="background: var(--bg-dark);">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-tag">EXPLORE CARS</div>
+                <h2>Featured <span class="gradient-text">Vehicles</span></h2>
+                <p>Explore our curated collection of cars with stunning 360° views</p>
+            </div>
+
+            <div class="features-grid">
+                <!-- Car 1 -->
+                <div class="feature-card">
+                    <div style="background: linear-gradient(135deg, rgba(0, 229, 255, 0.1), rgba(255, 61, 0, 0.1)); border-radius: 15px; padding: 2rem; margin-bottom: 1.5rem;">
+                        <div style="font-size: 4rem; text-align: center;">🏎️</div>
+                    </div>
+                    <h3>Tata Nexon EV</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">₹14.49L - ₹19.29L</p>
+                    <p>India's best-selling electric SUV with 465km range. Perfect for city commutes and weekend getaways.</p>
+                    <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(0, 229, 255, 0.1); display: flex; justify-content: space-between; font-size: 0.9rem; color: var(--text-secondary);">
+                        <span>⚡ Electric</span>
+                        <span>👥 5 Seater</span>
+                        <span>⭐ 4.2/5</span>
+                    </div>
+                </div>
+
+                <!-- Car 2 -->
+                <div class="feature-card">
+                    <div style="background: linear-gradient(135deg, rgba(0, 229, 255, 0.1), rgba(255, 61, 0, 0.1)); border-radius: 15px; padding: 2rem; margin-bottom: 1.5rem;">
+                        <div style="font-size: 4rem; text-align: center;">🚙</div>
+                    </div>
+                    <h3>Mahindra XUV700</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">₹13.99L - ₹25.49L</p>
+                    <p>Premium SUV with advanced driver assistance and luxurious interiors. The complete package.</p>
+                    <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(0, 229, 255, 0.1); display: flex; justify-content: space-between; font-size: 0.9rem; color: var(--text-secondary);">
+                        <span>⛽ Petrol/Diesel</span>
+                        <span>👥 7 Seater</span>
+                        <span>⭐ 4.5/5</span>
+                    </div>
+                </div>
+
+                <!-- Car 3 -->
+                <div class="feature-card">
+                    <div style="background: linear-gradient(135deg, rgba(0, 229, 255, 0.1), rgba(255, 61, 0, 0.1)); border-radius: 15px; padding: 2rem; margin-bottom: 1.5rem;">
+                        <div style="font-size: 4rem; text-align: center;">🚗</div>
+                    </div>
+                    <h3>Hyundai Creta</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">₹11.00L - ₹20.30L</p>
+                    <p>India's favorite mid-size SUV with panoramic sunroof and premium features at great value.</p>
+                    <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(0, 229, 255, 0.1); display: flex; justify-content: space-between; font-size: 0.9rem; color: var(--text-secondary);">
+                        <span>⛽ Petrol/Diesel</span>
+                        <span>👥 5 Seater</span>
+                        <span>⭐ 4.3/5</span>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 3rem;">
+                <button class="btn-primary" onclick="scrollToSignup()">View All Cars</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="features" id="how-it-works" style="background: var(--bg-darker);">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-tag">SIMPLE PROCESS</div>
+                <h2>How <span class="gradient-text">It Works</span></h2>
+                <p>Your journey to finding the perfect car in just 3 simple steps</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div style="width: 60px; height: 60px; background: linear-gradient(135deg, var(--accent), var(--accent-secondary)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; font-weight: 900; margin-bottom: 1.5rem;">1</div>
+                    <h3>Explore in 3D</h3>
+                    <p>Browse our collection of cars with stunning 360° 3D views. Rotate, zoom, and explore every angle from the comfort of your home.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div style="width: 60px; height: 60px; background: linear-gradient(135deg, var(--accent), var(--accent-secondary)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; font-weight: 900; margin-bottom: 1.5rem;">2</div>
+                    <h3>Compare & Research</h3>
+                    <p>Read real owner reviews, compare specs side-by-side, and use our AI assistant to get personalized recommendations based on your needs.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div style="width: 60px; height: 60px; background: linear-gradient(135deg, var(--accent), var(--accent-secondary)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; font-weight: 900; margin-bottom: 1.5rem;">3</div>
+                    <h3>Make Smart Decision</h3>
+                    <p>Get complete cost of ownership analysis, dealer ratings, and our comprehensive buying guide. Buy with complete confidence.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="features" id="pricing" style="background: var(--bg-dark);">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-tag">ALWAYS FREE</div>
+                <h2>For <span class="gradient-text">Everyone</span></h2>
+                <p>Complete access to all features. No hidden charges, ever.</p>
+            </div>
+
+            <div style="max-width: 800px; margin: 0 auto;">
+                <div class="feature-card" style="padding: 3rem;">
+                    <div style="text-align: center; margin-bottom: 2rem;">
+                        <h2 style="font-size: 3.5rem; font-weight: 900; margin-bottom: 0.5rem;">100% Free</h2>
+                        <p style="color: var(--text-secondary); font-size: 1.1rem;">Forever. For everyone.</p>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 2.5rem;">
+                        <div>
+                            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                                <span style="color: var(--accent); font-size: 1.5rem;">✓</span>
+                                <span>360° 3D Car Views</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                                <span style="color: var(--accent); font-size: 1.5rem;">✓</span>
+                                <span>Real Owner Reviews</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                                <span style="color: var(--accent); font-size: 1.5rem;">✓</span>
+                                <span>AI Car Assistant</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                                <span style="color: var(--accent); font-size: 1.5rem;">✓</span>
+                                <span>Smart Comparisons</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                                <span style="color: var(--accent); font-size: 1.5rem;">✓</span>
+                                <span>Cost Calculator</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                                <span style="color: var(--accent); font-size: 1.5rem;">✓</span>
+                                <span>Buying Guides</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 3rem;">
+                        <button class="btn-primary" onclick="scrollToSignup()">Join Waitlist</button>
+                        <p style="margin-top: 1rem; font-size: 0.85rem; color: var(--text-secondary);">🚀 Launching March 2026 • No credit card required</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="features" id="about" style="background: var(--bg-darker);">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-tag">QUESTIONS?</div>
+                <h2>Frequently Asked <span class="gradient-text">Questions</span></h2>
+                <p>Everything you need to know about CarAxis360</p>
+            </div>
+
+            <div style="max-width: 900px; margin: 0 auto; display: grid; gap: 1.5rem;">
+                <div class="feature-card">
+                    <h3 style="margin-bottom: 1rem;">What is CarAxis360?</h3>
+                    <p>CarAxis360 is India's first 360° car discovery platform. We let you explore cars in stunning 3D, read real owner reviews, compare specifications, and make informed buying decisions—all from your home.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3 style="margin-bottom: 1rem;">Is it really free?</h3>
+                    <p>Yes! CarAxis360 is 100% free for car buyers. We make money through partnerships with dealers and manufacturers, not from users. You get complete access to all features at no cost.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3 style="margin-bottom: 1rem;">When will CarAxis360 launch?</h3>
+                    <p>We're launching in March 2026! Join our waitlist to get early access, exclusive updates, and be among the first to experience the future of car buying in India.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3 style="margin-bottom: 1rem;">How many cars will be available?</h3>
+                    <p>We're starting with 50+ popular car models in 360° 3D at launch. We'll be adding new cars every week based on user demand. Can't find your dream car? Let us know!</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3 style="margin-bottom: 1rem;">Can I buy cars directly from CarAxis360?</h3>
+                    <p>We're a discovery and research platform. Once you've found your perfect car, we'll connect you with trusted dealers in your city who offer the best deals.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3 style="margin-bottom: 1rem;">Do you have a mobile app?</h3>
+                    <p>Our website works perfectly on mobile! A dedicated mobile app is coming in Q2 2026. Join the waitlist to be notified when it launches.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Email Signup -->
     <section class="signup-section" id="signup">
         <div class="container">
@@ -729,14 +1389,65 @@
     <!-- Footer -->
     <footer>
         <div class="container">
-            <div class="footer-content">
-                <p>&copy; 2026 CarAxis360. All rights reserved.</p>
-                <p style="margin-top: 0.5rem;">India's First 360° Car Discovery Platform</p>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 3rem; margin-bottom: 3rem; text-align: left;">
+                <!-- About -->
+                <div>
+                    <h4 style="font-family: 'Space Grotesk', sans-serif; font-size: 1.2rem; font-weight: 700; margin-bottom: 1.5rem; color: var(--accent);">CarAxis360</h4>
+                    <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 1.5rem;">
+                        India's first 360° car discovery platform. Explore cars in stunning 3D, read real reviews, and make confident buying decisions.
+                    </p>
+                    <div style="display: flex; gap: 1rem;">
+                        <a href="#" style="width: 40px; height: 40px; border-radius: 50%; background: rgba(0, 229, 255, 0.1); display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.background='rgba(0, 229, 255, 0.2)'" onmouseout="this.style.background='rgba(0, 229, 255, 0.1)'">
+                            <span style="color: var(--accent);">𝕏</span>
+                        </a>
+                        <a href="#" style="width: 40px; height: 40px; border-radius: 50%; background: rgba(0, 229, 255, 0.1); display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.background='rgba(0, 229, 255, 0.2)'" onmouseout="this.style.background='rgba(0, 229, 255, 0.1)'">
+                            <span style="color: var(--accent);">in</span>
+                        </a>
+                        <a href="#" style="width: 40px; height: 40px; border-radius: 50%; background: rgba(0, 229, 255, 0.1); display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.background='rgba(0, 229, 255, 0.2)'" onmouseout="this.style.background='rgba(0, 229, 255, 0.1)'">
+                            <span style="color: var(--accent);">IG</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Product -->
+                <div>
+                    <h4 style="font-size: 1rem; font-weight: 700; margin-bottom: 1.5rem; color: var(--text);">Product</h4>
+                    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                        <a href="#features" style="color: var(--text-secondary); text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-secondary)'">Features</a>
+                        <a href="#cars" style="color: var(--text-secondary); text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-secondary)'">Browse Cars</a>
+                        <a href="#how-it-works" style="color: var(--text-secondary); text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-secondary)'">How It Works</a>
+                        <a href="#pricing" style="color: var(--text-secondary); text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-secondary)'">Pricing</a>
+                    </div>
+                </div>
+
+                <!-- Company -->
+                <div>
+                    <h4 style="font-size: 1rem; font-weight: 700; margin-bottom: 1.5rem; color: var(--text);">Company</h4>
+                    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                        <a href="#about" style="color: var(--text-secondary); text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-secondary)'">About Us</a>
+                        <a href="#" style="color: var(--text-secondary); text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-secondary)'">Blog</a>
+                        <a href="#" style="color: var(--text-secondary); text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-secondary)'">Careers</a>
+                        <a href="#" style="color: var(--text-secondary); text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-secondary)'">Contact</a>
+                    </div>
+                </div>
+
+                <!-- Legal -->
+                <div>
+                    <h4 style="font-size: 1rem; font-weight: 700; margin-bottom: 1.5rem; color: var(--text);">Legal</h4>
+                    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                        <a href="#privacy" style="color: var(--text-secondary); text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-secondary)'">Privacy Policy</a>
+                        <a href="#terms" style="color: var(--text-secondary); text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-secondary)'">Terms of Service</a>
+                        <a href="#cookie" style="color: var(--text-secondary); text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-secondary)'">Cookie Policy</a>
+                        <a href="#disclaimer" style="color: var(--text-secondary); text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-secondary)'">Disclaimer</a>
+                    </div>
+                </div>
             </div>
-            <div class="footer-links">
-                <a href="#privacy">Privacy Policy</a>
-                <a href="#terms">Terms of Service</a>
-                <a href="#contact">Contact</a>
+
+            <div style="border-top: 1px solid rgba(0, 229, 255, 0.1); padding-top: 2rem;">
+                <div class="footer-content">
+                    <p>&copy; 2026 CarAxis360. All rights reserved.</p>
+                    <p style="margin-top: 0.5rem;">Made with ❤️ in India • Launching March 2026</p>
+                </div>
             </div>
         </div>
     </footer>
@@ -794,6 +1505,151 @@
             el.style.transition = 'all 0.6s ease';
             observer.observe(el);
         });
+    </script>
+
+    <!-- ═══════════════════════════════════════════════════════
+         CINEMATIC INTRO - Globe & Animation
+    ═══════════════════════════════════════════════════════ -->
+    <script>
+    (function() {
+        const introScreen = document.getElementById('intro-screen');
+        const skipBtn = document.getElementById('intro-skip');
+        const canvas = document.getElementById('globeCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Auto-remove intro after 5 seconds OR on skip
+        const INTRO_DURATION = 5000;
+        
+        function endIntro() {
+            introScreen.classList.add('fade-out');
+            document.body.classList.remove('intro-active');
+            setTimeout(() => {
+                introScreen.style.display = 'none';
+            }, 1200);
+        }
+        
+        // Skip button
+        skipBtn.addEventListener('click', endIntro);
+        
+        // Auto-end after duration
+        setTimeout(endIntro, INTRO_DURATION);
+        
+        // ═══ Animated Globe Drawing ═══
+        let time = 0;
+        
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+        
+        function drawGlobe() {
+            const w = canvas.width;
+            const h = canvas.height;
+            const cx = w / 2;
+            const cy = h / 2;
+            const radius = Math.min(w, h) * 0.25;
+            
+            ctx.clearRect(0, 0, w, h);
+            
+            // Rotating globe wireframe
+            ctx.save();
+            ctx.translate(cx, cy);
+            
+            // Draw multiple rotating rings
+            for (let i = 0; i < 3; i++) {
+                const ringRadius = radius + (i * 40);
+                const rotation = time * 0.2 + (i * Math.PI / 3);
+                
+                ctx.save();
+                ctx.rotate(rotation);
+                
+                // Holographic gradient
+                const gradient = ctx.createLinearGradient(-ringRadius, -ringRadius, ringRadius, ringRadius);
+                gradient.addColorStop(0, 'rgba(102, 126, 234, 0.3)');
+                gradient.addColorStop(0.5, 'rgba(0, 242, 254, 0.5)');
+                gradient.addColorStop(1, 'rgba(240, 147, 251, 0.3)');
+                
+                ctx.strokeStyle = gradient;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.ellipse(0, 0, ringRadius, ringRadius * 0.3, 0, 0, Math.PI * 2);
+                ctx.stroke();
+                
+                ctx.restore();
+            }
+            
+            // Center sphere glow
+            const glowGradient = ctx.createRadialGradient(0, 0, 0, 0, 0, radius * 0.6);
+            glowGradient.addColorStop(0, 'rgba(0, 242, 254, 0.4)');
+            glowGradient.addColorStop(0.5, 'rgba(102, 126, 234, 0.2)');
+            glowGradient.addColorStop(1, 'transparent');
+            ctx.fillStyle = glowGradient;
+            ctx.beginPath();
+            ctx.arc(0, 0, radius * 0.6, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Draw latitude lines
+            for (let lat = -60; lat <= 60; lat += 30) {
+                const y = Math.sin((lat * Math.PI) / 180) * radius;
+                const r = Math.cos((lat * Math.PI) / 180) * radius;
+                
+                ctx.strokeStyle = 'rgba(0, 229, 255, 0.2)';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.ellipse(0, y, r, r * 0.2, 0, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+            
+            // Draw longitude lines
+            for (let lon = 0; lon < 12; lon++) {
+                const angle = (lon * Math.PI) / 6 + time * 0.1;
+                ctx.save();
+                ctx.rotate(angle);
+                ctx.strokeStyle = 'rgba(0, 229, 255, 0.2)';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.ellipse(0, 0, radius, radius * 0.2, 0, 0, Math.PI * 2);
+                ctx.stroke();
+                ctx.restore();
+            }
+            
+            // Ferrari F1 car in center
+            ctx.save();
+            const carScale = 0.15;
+            ctx.scale(carScale, carScale);
+            
+            // Simple F1 car silhouette
+            ctx.fillStyle = '#DC0000';
+            ctx.beginPath();
+            ctx.roundRect(-120, -20, 240, 40, 10);
+            ctx.fill();
+            
+            // Wheels
+            ctx.fillStyle = '#1a1a1a';
+            ctx.beginPath();
+            ctx.arc(-80, 25, 18, 0, Math.PI * 2);
+            ctx.arc(80, 25, 18, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Glow
+            ctx.strokeStyle = '#00f2fe';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.arc(100, 0, 8, 0, Math.PI * 2);
+            ctx.stroke();
+            
+            ctx.restore();
+            
+            ctx.restore();
+            
+            time += 0.02;
+            requestAnimationFrame(drawGlobe);
+        }
+        
+        drawGlobe();
+    })();
     </script>
 </body>
 </html>
